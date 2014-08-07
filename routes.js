@@ -149,7 +149,7 @@ module.exports=function(app,config, r){
   app.get('/pwd',function(req,res){
     if(!req.session.cwd)
       req.session.cwd = '/';
-    res.json(req.session.cwd);
+    res.json("In directory "+req.session.cwd);
   });
 
   app.get('/ls',function(req,res){
@@ -168,11 +168,9 @@ module.exports=function(app,config, r){
         users.get(function(userList){
           var response='';
           for(i in userList){
-            response+=userList[i]+"\t";
-            if(i%10==0)
-              response+="\n";
+            response+=userList[i]+"\n";
           }
-          res.json(response);
+          res.json("(player files)\n"+response);
         });
         break;
       default:
