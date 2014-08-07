@@ -29,7 +29,7 @@ function setSession(req,res,next){
 // Common Configuration
 app.configure(function(){
     app.use(express.cookieParser());
-    app.use(express.session({ 'key':'codematics',secret: "BSAIDG&*A^yuguisayds8a7" }));
+    app.use(express.session({ 'key':'excelhackm',secret: "BadboyaHackMasteryds8a7" }));
     app.use(express.bodyParser());
     app.use(express.static(__dirname + '/public'));
     app.use(setSession);

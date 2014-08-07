@@ -44,7 +44,7 @@ module.exports=function(app,config, r){
    * Respond back with the username
    */
   app.get('/whoami', function(req,res){
-    res.json(req.session.username|| "guest");
+    res.json(req.session.username|| "player");
   });
   app.get('/user/:username', function(req,res){
     users.solvedProblems(req.params.username, function(response){
@@ -56,6 +56,7 @@ module.exports=function(app,config, r){
   });
   app.get('/register/:username/:password', function(req, res){
     var username = req.params.username.replace(/\W/g, '');
+    console.log("* new registration : "+username);
     users.create(username, req.params.password, function(result){
       if(result){
         res.json("User successfully created.");
@@ -71,8 +72,9 @@ module.exports=function(app,config, r){
     var username = req.params.username.replace(/\W/g, '');
     users.checkPass(username, req.params.password, function(response){
       if(response==true){
+        console.log("** login by : "+username);
         req.session.username = username;
-        res.json("Logged in as "+ req.params.username+" successfully.");
+        res.json("welcome "+ req.params.username+".");
       }
       else
         res.json("[[;;;red]Error in logging in.");
@@ -173,7 +175,7 @@ module.exports=function(app,config, r){
     switch(cwd){
       case '/':
         if(file == 'README')
-          res.json({msg: '<b>CodeBot</b> is an alternative interface to Project Euler, made by <a target="_blank" href="https://facebook.com/SDSLabs">SDSLabs</a>, IIT Roorkee. The problems are same as those of <a href="https://projecteuler.net">Project Euler</a> and are used under a <a href="https://projecteuler.net/copyright">CC BY-NC-SA 2.0 UK</a> Licence.', raw:true});
+          res.json({msg: '<b>Hackmaster</b>1. We dont encourage hacking in any form and this competition is purely for educational purpose only.', raw:true});
         else
           res.json("cat: "+file+": No such file or directory");
         break;
@@ -207,31 +209,7 @@ module.exports=function(app,config, r){
       res.json(md5(sha1(req.params.str)));
   });
     app.get('*',function(req,res){
+    console.log("! 404 error");
     res.sendfile('./public/404.html');
-  });
-  app.get('/sv_restart/1',function(req,res){
-    res.json("Try running your own server if you wanna restart it.");
-  });
-  app.get('/google/:word',function(req,res){
-    res.json('@@Google@@ says '+req.params.word+' does not exist');
-  });
-  app.get('/*siri*',function(req,res){
-    res.json('No, I\'m not Siri, thankyou');
-  });
-  app.get('*', function(req, res){
-    var str = require('querystring').unescape(req.params[0]).replace(/\//g,' ');
-    if(str.charAt(str.length-1)=='?'){
-      //we get to ask wolfram alpha!
-      /**
-      wa.query(str,function(result){
-        if(typeof result == "string")
-          res.json({msg:result});
-        else
-          res.json({msg:"I did not understand that question.",className:"error"});
-      });
-      **/
-    }
-    else
-      res.json('[[;;;red]'+str+": command not found]");
   });
 }
