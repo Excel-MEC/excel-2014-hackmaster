@@ -24,7 +24,7 @@ module.exports=function(app,config, r){
     var id = parseInt(req.params.id);
     req.session.problemId = id;//Save the current problem Id for later use
     var title = problems.getTitle(id);
-    var html = problems.getHTML(id);
+    var html = problems.getHTML(id); 
     if(!html)
     {
       res.json("[[;;;red]No such problem]");
@@ -35,7 +35,7 @@ module.exports=function(app,config, r){
         msg = [
           {msg:"[[b;;]"+id+". "+title+"]"},
           {msg:html,raw:true},
-          "[[b;;;]Solved by "+solvers.length+" user(s).]"
+          "[[b;;;]Cracked by "+solvers.length+" player(s).]"
         ];
         res.json(msg);  
       });
@@ -43,9 +43,13 @@ module.exports=function(app,config, r){
   }); /**
    * Respond back with the username
    */
+  
   app.get('/whoami', function(req,res){
     res.json(req.session.username|| "player");
   });
+
+
+  
   app.get('/user/:username', function(req,res){
     users.solvedProblems(req.params.username, function(response){
       if(response.length==0)
@@ -54,6 +58,9 @@ module.exports=function(app,config, r){
         res.json(["Problems solved by "+req.params.username+": ", response.join(", ")]);
     })
   });
+  
+
+
   app.get('/register/:username/:password', function(req, res){
     var username = req.params.username.replace(/\W/g, '');
     console.log("* new registration : "+username);
@@ -103,14 +110,17 @@ module.exports=function(app,config, r){
   app.get('/problems',function(req,res){
     res.redirect('/problems/1/10');
   });
+
   //Fix a typo
   app.get('/problems/:id', function(req,res){
     res.redirect('/problem/'+req.param.id);
   });
+
   //Fix another typo
   app.get('/problem/:start/:end', function(req,res){
     res.redirect('/problems/'+req.params.start+"/"+req.params.end);
   });
+
   //Show the problems in a table
   app.get('/problems/:start/:end', function(req,res){
     var start=parseInt(req.params.start), end=parseInt(req.params.end);
@@ -123,6 +133,8 @@ module.exports=function(app,config, r){
     }
     res.json(response);
   });
+
+  
   app.get('/submit/:id/:solution', auth, function(req, res){
     var id = parseInt(req.params.id);
     if(problems.check(id, req.params.solution)){
