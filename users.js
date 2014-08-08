@@ -20,7 +20,9 @@ module.exports = function(r){
           r.sadd("users", username, function(){
             r.set("passwords:"+username, hash, function(){
                r.set("emails:"+username, email, function(){
-                  cb(true);
+                  r.zadd("scoreset", 1, username, function(){  //for leaderboard ranking. initialize each user with score 1.
+                    cb(true);
+                  });
                });
             });
           });
@@ -53,8 +55,10 @@ module.exports = function(r){
   var solved = function(username, id, cb){
     r.sadd("solved:users:"+username, id, function(){
       r.sadd("solved:problems:"+id, username, function(){
-        if(cb)
-          cb(true);
+        r.zincrby("scoreset", 1, username, function(){      //increase the score by one for each problem solved.
+          if(cb)
+              cb(true);
+        });
       });
     });
   }
