@@ -53,6 +53,9 @@ module.exports = function(r){
   };
 
   var solved = function(username, id, cb){
+    r.sismember("solved:users:"+username, id, function(err,res){
+    if(res);
+    else
     r.sadd("solved:users:"+username, id, function(){
       r.sadd("solved:problems:"+id, username, function(){
         r.zincrby("scoreset", 1, username, function(){      //increase the score by one for each problem solved.
@@ -61,7 +64,9 @@ module.exports = function(r){
         });
       });
     });
-  }
+   });
+}
+
 
   //returns users who have solved a given problem
   var getSolvers = function(id, cb){
