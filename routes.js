@@ -9,7 +9,7 @@ var auth= function(req,res, next){
     res.json("You need to be logged in to perform this action");
 }
 
-module.exports=function(app,config, r){
+module.exports=function(app, r){
   var users= require('./users')(r);
   function dbError(res){
     res.json("There was an error in performing your request.")

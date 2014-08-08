@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 var express = require('express'),
-    config = require('./config'),
+   // config = require('./config'),
     redis = require("redis");
 
 var r;
@@ -41,7 +41,7 @@ r.on("error", function (err) {
   process.exit(0);
 });
 // Routes
-require('./routes')(app, config, r);
+require('./routes')(app, r);
 
 app.listen(process.env.PORT || 8080);
 console.log("server started on port 8080");
