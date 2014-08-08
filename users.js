@@ -52,6 +52,25 @@ module.exports = function(r){
     });
   };
 
+  var getRank = function(username, cb){                                                       //need to test
+    var rank = 1 + r.zrevrank("scoreset", username, function(err,res){
+      if(err)
+        cb(false);
+      else 
+        cb(res+1);
+    });
+  };
+
+  var getRanklist = function(cb){
+    var ranklist = r.zrevrangebyscore("scoreset", '+inf', '-inf', function(err,res){          //need to test
+      if(err)
+        cb(false);
+      else
+        cb(res);
+    });
+  };
+
+
   var solved = function(username, id, cb){
     r.sismember("solved:users:"+username, id, function(err,res){
     if(res);
@@ -94,6 +113,8 @@ module.exports = function(r){
     checkPass: checkPass,
     markSolved: solved,
     solvers: getSolvers,
-    solvedProblems: getSolved
+    solvedProblems: getSolved,
+    rank  : getRank,
+    ranklist : getRanklist
   }
 };
