@@ -61,10 +61,10 @@ module.exports=function(app,config, r){
   
 
 
-  app.get('/register/:username/:password', function(req, res){
+  app.get('/register/:username/:password/:email', function(req, res){
     var username = req.params.username.replace(/\W/g, '');
     console.log("* new registration : "+username);
-    users.create(username, req.params.password, function(result){
+    users.create(username, req.params.password, req.params.email, function(result){
       if(result){
         res.json("User successfully created.");
         req.session.username = username;
@@ -97,7 +97,7 @@ module.exports=function(app,config, r){
       { msg:'[[b;;;white]problems] to see first 10 problems' },
       { msg:'[[b;;;white]problems <start> <end>] to view a list of problems numbering from start to end.' },
       { msg:'[[b;;;white]problem <ID>] to view a particular problem' },
-      { msg:'[[b;;;white]register <username> <password>] to register for CodeBot.' },
+      { msg:'[[b;;;white]register <username> <password> <email-id>] to register for CodeBot.' },
       { msg:'[[b;;;white]login <username> <password>] to login.' },
       { msg:'[[b;;;white]submit <ID> <Solution>] to submit a solution for a problem'  },
       { msg:'[[b;;;white]user <username>] to see the profile of a user' },

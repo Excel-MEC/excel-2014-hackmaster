@@ -3,7 +3,7 @@
 var util=require('./util');
 
 module.exports = function(r){
-  var createUser = function(username, password, cb){
+  var createUser = function(username, password, email, cb){
     username = username.replace(/\W/g, '');
     var hash = util.hash(password);
     //check if user already exists
@@ -17,8 +17,10 @@ module.exports = function(r){
         else{
           r.sadd("users", username, function(){
             r.set("passwords:"+username, hash, function(){
-              cb(true);
-            })
+               r.set("emails:"+username, email, function(){
+                  cb(true);
+               });
+            });
           });
         }
       }
