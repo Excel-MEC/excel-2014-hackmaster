@@ -63,14 +63,14 @@ module.exports=function(app,config, r){
 
   app.get('/register/:username/:password/:email', function(req, res){
     var username = req.params.username.replace(/\W/g, '');
-    console.log("* new registration : "+username);
     users.create(username, req.params.password, req.params.email, function(result){
       if(result){
         res.json("User successfully created.");
+        console.log("* new registration : "+username);
         req.session.username = username;
       }
       else{
-        res.json("[[;;;red]Error creating a user. Try a different username. (Valid usernames can only contain a-z,A-Z, 0-9 characters)")
+        res.json("[[;;;red]Error creating a user. Try a different username or enter a valid email-id.(Valid usernames can only contain a-z,A-Z, 0-9 characters)")
       }
     })
   });

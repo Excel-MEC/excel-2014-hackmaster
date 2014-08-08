@@ -1,11 +1,13 @@
 /** Users Module */
 
 var util=require('./util');
-
+var validator = require('validator');   //npm install validator
 module.exports = function(r){
   var createUser = function(username, password, email, cb){
     username = username.replace(/\W/g, '');
     var hash = util.hash(password);
+    if(validator.isEmail(email)==false)
+        cb(false);
     //check if user already exists
     var userInDB = r.sismember("users",username, function(err,res){
       if(err)
