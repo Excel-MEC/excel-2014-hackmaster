@@ -51,7 +51,7 @@ module.exports = function(r){
         cb(res);
     });
   };
-
+  //get the rank of a user
   var getRank = function(username, cb){                                                       //need to test
     var rank = 1 + r.zrevrank("scoreset", username, function(err,res){
       if(err)
@@ -60,7 +60,7 @@ module.exports = function(r){
         cb(res+1);
     });
   };
-
+  //return the users in order of the rank
   var getRanklist = function(cb){
     var ranklist = r.zrevrangebyscore("scoreset", '+inf', '-inf', function(err,res){          //need to test
       if(err)

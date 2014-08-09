@@ -58,6 +58,13 @@ module.exports=function(app, r){
         res.json(["Problems solved by "+req.params.username+": ", response.join(", ")]);
     })
   });
+
+
+  app.get('/rank/:username',function(req,res){
+    user.rank(req.params.username, function(response){
+      res.json(response);
+    });
+  });
   
 
 
@@ -101,6 +108,7 @@ module.exports=function(app, r){
       { msg:'[[b;;;white]login <username> <password>] to login.' },
       { msg:'[[b;;;white]submit <ID> <Solution>] to submit a solution for a problem'  },
       { msg:'[[b;;;white]user <username>] to see the profile of a user' },
+      { msg:'[[b;;;white]rank <username>] to see the rank of a user' },
       { msg:'Several other terminal commands (like [[;;;red]ls,cd,whoami] etc) are also supported.' }
     ]);
   });

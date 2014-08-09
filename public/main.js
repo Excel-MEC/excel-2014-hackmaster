@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var user = "ghost";
+  var user = "player";
   $.getJSON("/whoami", function(data){
     user = data;
     $("#console").terminal(
@@ -27,7 +27,7 @@ $(document).ready(function(){
           //update the user name after register or login
           if(url.search("/register")==0||url.search("/login")==0){
             $.getJSON("/whoami", function(data) {
-              term.set_prompt(data + '@Hackmaster $ ', function(){});
+              term.set_prompt(data + '@Hackmaster# ', function(){});
             });
             term.resume();
           } else{
@@ -43,7 +43,7 @@ $(document).ready(function(){
       {
         greetings: 'Welcome to Hackmaster. Type [[b;;]help] to begin.',
         height: $(window).height()-100,
-        prompt: user + '@Hackmaster $ ',
+        prompt: user + '@Hackmaster# ',
         keydown: function(e, term){
           if(e.keyCode==76 && e.ctrlKey==true)
             term.clear();
