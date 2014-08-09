@@ -69,7 +69,18 @@ module.exports=function(app, r){
     });
   });
   
-
+  app.get('/leaderboard/:top',function(req, res){
+    reply="";
+    if(req.params.top)
+    users.ranklist(function(response){
+        for(i=0 ; i<req.params.top && i<response.length ; i++){
+            reply+=((i+1)+". "+response[i]+"\n");
+        }
+        res.json("Leaderboard :-\n"+reply);
+    });
+    else
+      res.json("invalid limit.")
+  });
 
   app.get('/register/:username/:password/:email', function(req, res){
     var username = req.params.username.replace(/\W/g, '');
@@ -111,6 +122,7 @@ module.exports=function(app, r){
       { msg:'[[b;;;white]login <username> <password>] to login.' },
       { msg:'[[b;;;white]submit <ID> <Solution>] to submit a solution for a problem'  },
       { msg:'[[b;;;white]user <username>] to see the profile of a user' },
+      { msg:'[[b;;;white]leaderboard <limit>] to see the top users.' },
       { msg:'[[b;;;white]rank <username>] to see the rank of a user' },
       { msg:'Several other terminal commands (like [[;;;red]ls,cd,whoami] etc) are also supported.' }
     ]);
