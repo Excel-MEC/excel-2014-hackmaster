@@ -61,8 +61,11 @@ module.exports=function(app, r){
 
 
   app.get('/rank/:username',function(req,res){
-    user.rank(req.params.username, function(response){
-      res.json(response);
+    users.rank(req.params.username, function(response){
+        if(response)
+            res.json(["Rank of "+req.params.username+": "+response]);
+        else
+            res.json(["Not registered player"]);
     });
   });
   

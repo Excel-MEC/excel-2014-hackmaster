@@ -53,11 +53,16 @@ module.exports = function(r){
   };
   //get the rank of a user
   var getRank = function(username, cb){                                                       //need to test
-    var rank = 1 + r.zrevrank("scoreset", username, function(err,res){
-      if(err)
+    var rank = r.zrevrank("scoreset", username, function(err,res){ 
+     if(err)
         cb(false);
-      else 
-        cb(res+1);
+      else
+        r.sismember("users", username, function(err,res1){
+            if(res1)
+                cb(res+1);
+            else
+                cb(false);
+        });
     });
   };
   //return the users in order of the rank
