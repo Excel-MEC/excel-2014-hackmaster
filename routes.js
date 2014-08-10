@@ -69,6 +69,10 @@ module.exports=function(app, r){
     });
   });
   
+  app.get('/leaderboard',function(req,res){
+    res.redirect('/leaderboard/10');
+  });
+
   app.get('/leaderboard/:top',function(req, res){
     reply="";
     if(req.params.top)
@@ -118,12 +122,13 @@ module.exports=function(app, r){
       { msg:'[[b;;;white]problems] to see first 10 problems' },
       { msg:'[[b;;;white]problems <start> <end>] to view a list of problems numbering from start to end.' },
       { msg:'[[b;;;white]problem <ID>] to view a particular problem' },
-      { msg:'[[b;;;white]register <username> <password> <email-id>] to register for CodeBot.' },
+      { msg:'[[b;;;white]register <username> <password> <email-id>] to register for Hackmaster.' },
       { msg:'[[b;;;white]login <username> <password>] to login.' },
       { msg:'[[b;;;white]submit <ID> <Solution>] to submit a solution for a problem'  },
       { msg:'[[b;;;white]user <username>] to see the profile of a user' },
-      { msg:'[[b;;;white]leaderboard <limit>] to see the top users.' },
-      { msg:'[[b;;;white]rank <username>] to see the rank of a user' },
+      { msg:'[[b;;;white]leaderboard] to see the top 10 players.' },
+      { msg:'[[b;;;white]leaderboard <limit>] to see the top players.' },
+      { msg:'[[b;;;white]rank <username>] to see the rank of a player' },
       { msg:'Several other terminal commands (like [[;;;red]ls,cd,whoami] etc) are also supported.' }
     ]);
   });
@@ -180,7 +185,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=430;i++){
+        for(var i=1;i<=30;i++){
           response+=i+"\t";
           if(i%10==0)
             response+="\n";
