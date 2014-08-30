@@ -1,29 +1,25 @@
-/**
- * Module dependencies.
- */
+var cluster = require('cluster');
+// Code to run if we're in the master process
+if (cluster.isMaster) {
+    // Count the machine's CPUs
+    var cpuCount = require('os').cpus().length;
+    console.log("SERVER started on port : 8080");
+    console.log("CPU's detected         : "+cpuCount);
+    // Create a worker for each CPU
+    for (var i = 0; i < cpuCount; i += 1) 
+        cluster.fork();
+// Code to run if we're in a worker process
+} else {
 var express = require('express'),
-   // config = require('./config'),
-    redis = require("redis");
-
-var r;
-//Production
-if(process.env.REDISCLOUD_URL){
-    var url = require("url");
-    var redisURL = url.parse(process.env.REDISCLOUD_URL);
-    r = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
-    r.auth(redisURL.auth.split(":")[1]);
-}
-//Development
-else{
-    r = redis.createClient();
-}
-
-var app = module.exports = express();
-function setSession(req,res,next){
+   //config = require('./config'),
+    redis   = require("redis"),
+    r       = redis.createClient(),
+    app     = module.exports = express();
+function setSession(req, res, next){
     if(!req.session)
-        req.session={cwd:'/'};
+        req.session = {cwd:'/'};
     if(!req.cookies)
-        req.cookies={};
+        req.cookies = {};
     next();
 }
 // Common Configuration
@@ -35,13 +31,12 @@ app.configure(function(){
     app.use(setSession);
     app.use(app.router);
 });
-
 r.on("error", function (err) {
   console.log("Error " + err);
   process.exit(0);
 });
 // Routes
 require('./routes')(app, r);
-
 app.listen(process.env.PORT || 8080);
-console.log("server started on port 8080");
+console.log('WORKER ' + cluster.worker.id + ' now running!');
+}
