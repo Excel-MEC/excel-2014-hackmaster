@@ -8,6 +8,11 @@ if (cluster.isMaster) {
     // Create a worker for each CPU
     for (var i = 0; i < cpuCount; i += 1) 
         cluster.fork();
+    // Listen for dying workers
+    cluster.on('exit', function (worker) {
+        console.log('WORKER ' + worker.id + ' DEAD !');
+        cluster.fork();
+    });
 // Code to run if we're in a worker process
 } else {
 var express = require('express'),
@@ -38,5 +43,5 @@ r.on("error", function (err) {
 // Routes
 require('./routes')(app, r);
 app.listen(process.env.PORT || 8080);
-console.log('WORKER ' + cluster.worker.id + ' now running!');
+console.log('WORKER ' + cluster.worker.id + ' now RUNNING !');
 }
