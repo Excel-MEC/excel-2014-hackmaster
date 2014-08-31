@@ -53,4 +53,10 @@ r.on("error", function (err) {
 require('./routes')(app, r);
 app.listen(process.env.PORT || 8080);
 console.log('WORKER ' + cluster.worker.id + ' now RUNNING !');
+process.on('SIGINT', function() {
+  server.close();
+  // calling .shutdown allows your process to exit normally
+  toobusy.shutdown();
+  process.exit();
+});
 }
