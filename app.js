@@ -1,3 +1,4 @@
+//hackmaster2014
 var cluster = require('cluster');
 // Code to run if we're in the master process
 if (cluster.isMaster) {
@@ -17,9 +18,17 @@ if (cluster.isMaster) {
 } else {
 var express = require('express'),
    //config = require('./config'),
+    toobusy = require('toobusy'),
     redis   = require("redis"),
     r       = redis.createClient(),
     app     = module.exports = express();
+// middleware which blocks requests when we're too busy
+app.use(function(req, res, next) {
+    if (toobusy()) 
+        res.send(503, "Hack_Mast3r_503");
+    else 
+        next();
+});
 function setSession(req, res, next){
     if(!req.session)
         req.session = {cwd:'/'};
