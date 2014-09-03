@@ -38,10 +38,12 @@ function setSession(req, res, next){
 }
 // Common Configuration
 app.configure(function(){
-    app.use(express.cookieParser());
-    app.use(express.session({ 'key':'excelhackm',secret: "BadboyaHackMasteryds8a7" }));
+    app.use(express.compress()); // compressing for static files
+    app.use(express.static(__dirname + '/public',{maxAge: 86400000}));  //one day caching
+    app.use(express.limit('1mb'));   
     app.use(express.bodyParser());
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.cookieParser());
+    app.use(express.session({ key:'excelhackm', secret:"BadboyaHackMasteryds8a7" }));
     app.use(setSession);
     app.use(app.router);
 });
