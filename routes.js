@@ -186,6 +186,9 @@ module.exports=function(app, r){
       case 'problems':
         var response=''
         for(var i=1;i<=30;i++){
+	  if(i<10)
+	  response+="0"+i+"\t";
+	  else
           response+=i+"\t";
           if(i%10==0)
             response+="\n";
@@ -213,12 +216,12 @@ module.exports=function(app, r){
     switch(cwd){
       case '/':
         if(file == 'README')
-          res.json({msg: '<b>Hackmaster</b>1. We dont encourage hacking in any form and this competition is purely for educational purpose only.', raw:true});
+          res.json({msg: 'Try help command ;)', raw:true});
         else
           res.json("cat: "+file+": No such file or directory");
         break;
       case 'problems':
-        res.redirect('/problem/'+file);
+        res.redirect('/problem/'+parseInt(file));
         break;
       case 'users':
         res.redirect('/user/'+file);

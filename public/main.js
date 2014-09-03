@@ -41,7 +41,7 @@ $(document).ready(function(){
         })
       },
       {
-        greetings: 'Welcome to Hackmaster. Type [[b;;]help] to begin.',
+        greetings: '',
         height: $(window).height()-100,
         prompt: user + '@Hackmaster# ',
         keydown: function(e, term){
