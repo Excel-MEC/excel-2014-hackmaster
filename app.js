@@ -39,6 +39,7 @@ function setSession(req, res, next){
 // Common Configuration
 app.configure(function(){
     app.use(express.compress()); // compressing for static files
+    app.use(express.favicon(__dirname + '/public/images/favicon.ico',{ maxAge: 2592000000 }));
     app.use(express.static(__dirname + '/public',{maxAge: 86400000}));  //one day caching
     app.use(express.limit('1mb'));   
     app.use(express.bodyParser());
