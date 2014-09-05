@@ -35,7 +35,7 @@ module.exports=function(app, r){
         msg = [
           {msg:"[[b;;]"+id+". "+title+"]"},
           {msg:html,raw:true},
-          "[[b;;;]Cracked by "+solvers.length+" player(s).]"
+          "[[b;;;]\nCracked by "+solvers.length+" hacker(s).]"
         ];
         res.json(msg);  
       });
@@ -45,12 +45,12 @@ module.exports=function(app, r){
    */
   
   app.get('/whoami', function(req,res){
-    res.json(req.session.username|| "player");
+    res.json(req.session.username|| "guest");
   });
 
 
   
-  app.get('/user/:username', function(req,res){
+  app.get('/hacker/:username', function(req,res){
     users.solvedProblems(req.params.username, function(response){
       if(response.length==0)
         res.json("No solved problems");
@@ -65,7 +65,7 @@ module.exports=function(app, r){
         if(response)
             res.json(["Rank of "+req.params.username+": "+response]);
         else
-            res.json(["Not registered player"]);
+            res.json(["Not registered hacker"]);
     });
   });
   
@@ -120,16 +120,16 @@ module.exports=function(app, r){
       { raw: true, msg:"You can type the following commands: "},
       { msg:"[[b;;;white]help] For this help message"},
       { msg:'[[b;;;white]problems] to see first 10 problems' },
-      { msg:'[[b;;;white]problems <start> <end>] to view a list of problems numbering from start to end.' },
+      { msg:'[[b;;;white]problems <start> <end>] to view a list of problems.' },
       { msg:'[[b;;;white]problem <ID>] to view a particular problem' },
       { msg:'[[b;;;white]register <username> <password> <email-id>] to register for Hackmaster.' },
       { msg:'[[b;;;white]login <username> <password>] to login.' },
       { msg:'[[b;;;white]submit <ID> <Solution>] to submit a solution for a problem'  },
-      { msg:'[[b;;;white]user <username>] to see the profile of a user' },
-      { msg:'[[b;;;white]leaderboard] to see the top 10 players.' },
-      { msg:'[[b;;;white]leaderboard <limit>] to see the top players.' },
-      { msg:'[[b;;;white]rank <username>] to see the rank of a player' },
-      { msg:'Several other terminal commands (like [[;;;red]ls,cd,whoami] etc) are also supported.' }
+      { msg:'[[b;;;white]hacker <username>] to see the profile of a hacker.' },
+      { msg:'[[b;;;white]leaderboard] to see the top 10 hackers.' },
+      { msg:'[[b;;;white]leaderboard <limit>] to see the top hackers.' },
+      { msg:'[[b;;;white]rank <username>] to see the rank of a hacker.' },
+      { msg:'Several other terminal commands (like [[;;;red]clear, ls, cd, whoami] etc) are also supported.' }
     ]);
   });
 
@@ -166,11 +166,11 @@ module.exports=function(app, r){
   app.get('/submit/:id/:solution', auth, function(req, res){
     var id = parseInt(req.params.id);
     if(problems.check(id, req.params.solution)){
-      res.json("Correct Answer.");
+      res.json("You have Cracked it.");
       users.markSolved(req.session.username, id);
     }
     else{
-      res.json("Sorry, Wrong Answer.");
+      res.json("Sorry old sport, Wrong Answer.");
     }
   });
   /** Session aware routes **/
@@ -195,17 +195,17 @@ module.exports=function(app, r){
         }
         res.json(response);
         break;
-      case 'users':
+      case 'hackers':
         users.get(function(userList){
           var response='';
           for(i in userList){
             response+=userList[i]+"\n";
           }
-          res.json("(player files)\n"+response);
+          res.json("(hacker(s) rapsheet)\n"+response);
         });
         break;
       default:
-        res.json('[[b;;;]problems/]  README [[b;;;]users/]');
+        res.json('[[b;;;]problems/]  README.txt [[b;;;]hackers/]');
     }
   });
 
@@ -215,7 +215,7 @@ module.exports=function(app, r){
     var file = req.params[1];
     switch(cwd){
       case '/':
-        if(file == 'README')
+        if(file == 'README.txt')
           res.json({msg: 'Try help command ;)', raw:true});
         else
           res.json("cat: "+file+": No such file or directory");
@@ -223,8 +223,8 @@ module.exports=function(app, r){
       case 'problems':
         res.redirect('/problem/'+parseInt(file));
         break;
-      case 'users':
-        res.redirect('/user/'+file);
+      case 'hackers':
+        res.redirect('/hacker/'+file);
         break;
       default:
         res.json(cmd+": "+file+": No such file or directory");
@@ -234,13 +234,13 @@ module.exports=function(app, r){
   app.get('/cd/:dir?',function(req,res){
     var cwd = req.session.cwd;
     var dir = req.params.dir || '/';
-    if(dir == '/' || dir == 'users' || dir == 'problems')
+    if(dir == '/' || dir == 'hackers' || dir == 'problems')
     {
       req.session.cwd = dir//change directory
       res.redirect('/pwd');//notify user of directory change
     }
     else
-      res.json("[[;;;red]Invalid Directory]");
+      res.json("[[;;;red]Invalid Directory.]");
       //invalid directory
   });
 
@@ -250,7 +250,8 @@ module.exports=function(app, r){
       res.json(md5(sha1(req.params.str)));
   });
     app.get('*',function(req,res){
-    console.log("! 404 error");
-    res.sendfile('./public/404.html');
+    //console.log("! 404 error");
+    res.json("[[;;;red]Command not found.");
+    //res.sendfile('./public/404.html');
   });
 }
