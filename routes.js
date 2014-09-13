@@ -1,14 +1,12 @@
 var problems = require("./problem"),
     util = require("./util");
 //Express App, Configuration, Redis db
-
 var auth= function(req,res, next){
   if(req.session.username)
     next();
   else
     res.json("You need to be logged in to perform this action");
 }
-
 module.exports=function(app, r){
   var users= require('./users')(r);
   function dbError(res){
@@ -42,14 +40,10 @@ module.exports=function(app, r){
     }
   }); /**
    * Respond back with the username
-   */
-  
+   */ 
   app.get('/whoami', function(req,res){
     res.json(req.session.username|| "guest");
   });
-
-
-  
   app.get('/hacker/:username', function(req,res){
     users.solvedProblems(req.params.username, function(response){
       if(response.length==0)
@@ -58,8 +52,6 @@ module.exports=function(app, r){
         res.json(["Problems solved by "+req.params.username+": ", response.join(", ")]);
     })
   });
-
-
   app.get('/rank/:username',function(req,res){
     users.rank(req.params.username, function(response){
         if(response)
@@ -68,7 +60,6 @@ module.exports=function(app, r){
             res.json(["Not registered hacker"]);
     });
   });
-  
   app.get('/leaderboard',function(req,res){
     res.redirect('/leaderboard/10');
   });
@@ -95,7 +86,7 @@ module.exports=function(app, r){
         req.session.username = username;
       }
       else{
-        res.json("[[;;;red]Error creating a user. Try a different username or enter a valid email-id.(Valid usernames can only contain a-z,A-Z, 0-9 characters)")
+        res.json("[[;;;red]Error! Try a different username or enter a valid email-id.(usernames can only contain a-z,A-Z, 0-9 characters).")
       }
     })
   });
@@ -161,8 +152,6 @@ module.exports=function(app, r){
     }
     res.json(response);
   });
-
-  
   app.get('/submit/:id/:solution', auth, function(req, res){
     var id = parseInt(req.params.id);
     if(problems.check(id, req.params.solution)){
@@ -176,8 +165,8 @@ module.exports=function(app, r){
   /** Session aware routes **/
   app.get('/pwd',function(req,res){
     if(!req.session.cwd)
-      req.session.cwd = '/';
-    res.json("In directory "+req.session.cwd);
+      req.session.cwd = '~';
+    res.json(req.session.cwd);
   });
 
   app.get('/ls',function(req,res){
@@ -210,13 +199,25 @@ module.exports=function(app, r){
   });
 
   app.get(/(file|open|cat|more|less)\/(\S+)/,function(req,res){
-    var cwd = req.session.cwd || '/';
+    var cwd = req.session.cwd || '~';
     var cmd=req.params[0];
     var file = req.params[1];
     switch(cwd){
-      case '/':
+      case '~':
         if(file == 'README.txt')
-          res.json({msg: 'Try help command ;)', raw:true});
+          res.json([
+            {msg: 'Rules',raw:true},
+            {msg: '1. Hackmaster is an online, individual event.'},
+            {msg: '2. Professionals are NOT allowed to participate.'},
+            {msg: '3. Attacking or flooding the server will lead to disqualification.'},
+            {msg: '4. Multiple accounts from a participant are NOT allowed.'},
+            {msg: '5. Participants suspected of using unfair means WILL BE disqualified.'},
+            {msg: '6. Any misuse of the Hackmaster forum will lead to immediate disqualification.'},
+            {msg: '7. The decisions and judgement of the coordinators will be final.'},
+            {msg: '8. Rules are subject to change at any point in time.'},
+            {msg: '9. Different levels will carry different weightage according to difficulty.'},
+            {msg: ' '}
+          ]);
         else
           res.json("cat: "+file+": No such file or directory");
         break;
@@ -233,8 +234,8 @@ module.exports=function(app, r){
 
   app.get('/cd/:dir?',function(req,res){
     var cwd = req.session.cwd;
-    var dir = req.params.dir || '/';
-    if(dir == '/' || dir == 'hackers' || dir == 'problems')
+    var dir = req.params.dir || '~';
+    if(dir == '~' || dir == 'hackers' || dir == 'problems')
     {
       req.session.cwd = dir//change directory
       res.redirect('/pwd');//notify user of directory change

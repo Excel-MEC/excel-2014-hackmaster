@@ -17,25 +17,34 @@ $(document).ready(function(){
             term.echo(data.msg,{raw:data.raw});
           }
         }
-        term.pause();//pause it till we get a reply
+        term.pause();
+        if(command.length>1000)
+          command="tldr";
         var url = "/"+command.split(' ').join('/');
-
-        if(url=="/cd/.."||url=="/cd//" || url=="..")
-          url = "/cd";
+        if(url=="/cd/.."||url=="/cd//" || url==".." || url=="/cd/~" || url=="/cd/.")
+          url = "/cd/~";
         $.getJSON(url, function(data){
+          if(data === "~" || data === "problems" || data === "hackers" );
+          else
           write(data);
-          //update the user name after register or login
-          if(url.search("/register")==0||url.search("/login")==0){
+          if( url.search("/register") == 0 || url.search("/login") == 0 ){
             $.getJSON("/whoami", function(data) {
-              term.set_prompt(data + '@Hackmaster# ', function(){});
+              term.set_prompt(data + '@Hackmaster/~# ', function(){});
             });
             term.resume();
-          } else{
+          } 
+          else if(url.search("/cd")==0){
+            $.getJSON("/whoami", function(data1) {
+              $.getJSON("/pwd", function(data2) {
+                term.set_prompt(data1 + '@Hackmaster/'+data2+'# ', function(){});
+              });
+            });
+            term.resume();
+          }
+          else{
             term.resume();
           }
         });
-
-
         $(document).ajaxError(function(e){
           term.resume();
         })
@@ -43,7 +52,7 @@ $(document).ready(function(){
       {
         greetings: '',
         height: $(window).height()-100,
-        prompt: user + '@Hackmaster# ',
+        prompt: user + '@Hackmaster/~# ',
         keydown: function(e, term){
           if(e.keyCode==76 && e.ctrlKey==true)
             term.clear();
