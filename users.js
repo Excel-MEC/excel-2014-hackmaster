@@ -82,9 +82,13 @@ module.exports = function(r){
     else
     r.sadd("solved:users:"+username, id, function(){
       r.sadd("solved:problems:"+id, username, function(){
-        r.zincrby("scoreset", 1, username, function(){      //increase the score by one for each problem solved.
+        var timestamp = Math.round(new Date().getTime());
+        //console.log(new Date().getTime());
+        var timestamp_future = 4232137830429*4; // some time in future
+        var highscore = parseFloat(100+parseFloat((timestamp_future-timestamp)*Math.pow(10,-13))); // logic :  zadd leaderboard highscore.(Long.MAX_VALUE - timestamp) player_id (no repeat scores)
+        console.log(highscore);
+        r.zincrby("scoreset", highscore, username, function(){    
           r.set("last_timestamp:"+username, new Date().getTime(),function(){
-            //console.log(new Date().getTime());
             if(cb)
               cb(true);
           });
@@ -93,7 +97,6 @@ module.exports = function(r){
     });
    });
 }
-
 
   //returns users who have solved a given problem
   var getSolvers = function(id, cb){
