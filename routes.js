@@ -47,9 +47,9 @@ module.exports=function(app, r){
   app.get('/hacker/:username', function(req,res){
     users.solvedProblems(req.params.username, function(response){
       if(response.length==0)
-        res.json("No solved problems");
+        res.json("No Reported Hacks.");
       else
-        res.json(["Problems solved by "+req.params.username+": ", response.join(", ")]);
+        res.json(["Hacks by "+req.params.username+": ", response.join(", ")]);
     })
   });
   app.get('/rank/:username',function(req,res){
@@ -79,23 +79,23 @@ module.exports=function(app, r){
 
   app.get('/register/:username/:password/:email', function(req, res){
     var username = req.params.username.replace(/\W/g, '');
-    users.create(username, req.params.password, req.params.email, function(result){
-      if(result){
-        res.json("User successfully created.");
-        console.log("* new registration : "+username);
-        req.session.username = username;
-      }
-      else{
-        res.json("[[;;;red]Error! Try a different username or enter a valid email-id.(usernames can only contain a-z,A-Z, 0-9 characters).")
-      }
-    })
+    var re = /\S+@\S+\.\S+/;
+    if(re.test(req.params.email))
+      users.create(username, req.params.password, req.params.email, function(result){
+        if(result){
+          req.session.username = username;
+          res.json("User successfully created.");
+        }
+        else
+          res.json("[[;;;red]Error! Try a different username or enter a valid email-id.(usernames can only contain a-z,A-Z, 0-9 characters).");      
+      });
   });
 
   app.get('/login/:username/:password', function(req,res){
     var username = req.params.username.replace(/\W/g, '');
     users.checkPass(username, req.params.password, function(response){
       if(response==true){
-        console.log("** login by : "+username);
+        //console.log("** login by : "+username);
         req.session.username = username;
         res.json("welcome "+ req.params.username+".");
       }
@@ -109,17 +109,15 @@ module.exports=function(app, r){
   app.get('/help',function(req,res){
     res.json([
       { raw: true, msg:"You can type the following commands: "},
-      { msg:"[[b;;;white]help] For this help message"},
-      { msg:'[[b;;;white]problems] to see first 10 problems' },
-      { msg:'[[b;;;white]problems <start> <end>] to view a list of problems.' },
-      { msg:'[[b;;;white]problem <ID>] to view a particular problem' },
       { msg:'[[b;;;white]register <username> <password> <email-id>] to register for Hackmaster.' },
       { msg:'[[b;;;white]login <username> <password>] to login.' },
+      { msg:'[[b;;;white]problem <ID>] to view a particular problem' },
       { msg:'[[b;;;white]submit <ID> <Solution>] to submit a solution for a problem'  },
       { msg:'[[b;;;white]hacker <username>] to see the profile of a hacker.' },
       { msg:'[[b;;;white]leaderboard] to see the top 10 hackers.' },
-      { msg:'[[b;;;white]leaderboard <limit>] to see the top hackers.' },
+      { msg:'[[b;;;white]leaderboard <N>] to see the top N hackers.' },
       { msg:'[[b;;;white]rank <username>] to see the rank of a hacker.' },
+      { msg:'[[b;;;white]logout] to exit.' },
       { msg:'Several other terminal commands (like [[;;;red]clear, ls, cd, whoami] etc) are also supported.' }
     ]);
   });
@@ -190,7 +188,7 @@ module.exports=function(app, r){
           for(i in userList){
             response+=userList[i]+"\n";
           }
-          res.json("(hacker(s) rapsheet)\n"+response);
+          res.json("(Blacklist)\n"+response);
         });
         break;
       default:
@@ -250,9 +248,12 @@ module.exports=function(app, r){
       var sha1=require("sha1");
       res.json(md5(sha1(req.params.str)));
   });
-    app.get('*',function(req,res){
-    //console.log("! 404 error");
-    res.json("[[;;;red]Command not found.");
-    //res.sendfile('./public/404.html');
+  app.get('/logout',function(req,res){
+      req.session.cwd='~';
+      req.session.username='guest';
+      res.json("Session Terminated.");
+  });
+  app.get('*',function(req,res){
+      res.json("[[;;;red]Command not found.");
   });
 }

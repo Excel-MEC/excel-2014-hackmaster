@@ -27,9 +27,15 @@ $(document).ready(function(){
           if(data === "~" || data === "problems" || data === "hackers" );
           else
           write(data);
-          if( url.search("/register") == 0 || url.search("/login") == 0 ){
-            $.getJSON("/whoami", function(data) {
-              term.set_prompt(data + '@Hackmaster/~# ', function(){});
+          if(data === "Session Terminated."){
+            term.set_prompt('guest@Hackmaster/~# ', function(){});
+            term.resume();
+          }
+          if( url.search("/register")==0||url.search("/login")==0){
+            $.getJSON("/whoami", function(data1) {
+              $.getJSON("/pwd", function(data2) {
+                term.set_prompt(data1 + '@Hackmaster/'+data2+'# ', function(){});
+              });
             });
             term.resume();
           } 

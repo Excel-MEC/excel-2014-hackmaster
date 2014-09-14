@@ -6,8 +6,6 @@ module.exports = function(r){
   var createUser = function(username, password, email, cb){
     username = username.replace(/\W/g, '');
     var hash = util.hash(password);
-    if(validator.isEmail(email)==false)
-        cb(false);
     //check if user already exists
     var userInDB = r.sismember("users",username, function(err,res){
       if(err)
@@ -17,6 +15,7 @@ module.exports = function(r){
           cb(false);
         }
         else{
+          //callback NIGHTMARE !
           r.sadd("users", username, function(){
             r.set("passwords:"+username, hash, function(){
                r.set("emails:"+username, email, function(){
@@ -27,6 +26,7 @@ module.exports = function(r){
             });
           });
         }
+        //cb(false);
       }
     });
   };
