@@ -68,14 +68,14 @@ module.exports = function(r){
   //return the users in order of the rank
   var getRanklist = function(cb){
     var ranklist = r.zrevrangebyscore("scoreset", '+inf', '-inf', function(err,res){          //need to test
+      //test      
       if(err)
         cb(false);
-      else
+      else{
         cb(res);
+      }
     });
   };
-
-
   var solved = function(username, id, cb){
     r.sismember("solved:users:"+username, id, function(err,res){
     if(res);
@@ -83,8 +83,11 @@ module.exports = function(r){
     r.sadd("solved:users:"+username, id, function(){
       r.sadd("solved:problems:"+id, username, function(){
         r.zincrby("scoreset", 1, username, function(){      //increase the score by one for each problem solved.
-          if(cb)
+          r.set("last_timestamp:"+username, new Date().getTime(),function(){
+            //console.log(new Date().getTime());
+            if(cb)
               cb(true);
+          });
         });
       });
     });
