@@ -298,6 +298,9 @@ module.exports=function(app, r){
       req.session.username='guest';
       res.json("Session Terminated.");
   });
+  //404 for hackmaster question
+  app.get('/404', function(req,res){res.sendfile('public/404.html');});
+  app.get('/pagenotfound',function(req,res){res.redirect('/404')});
   app.get('*',function(req,res){
       res.json("[[;;;red]Command not found.");
   });
