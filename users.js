@@ -22,7 +22,10 @@ module.exports = function(r){
               r.set("passwords:"+username, hash, function(){
                 r.sadd("uniq_emails",email,function(){
                  r.set("emails:"+username, email, function(){
-                    r.zadd("scoreset", 1, username, function(){  //for leaderboard ranking. initialize each user with score 1.
+                    var timestamp = Math.round(new Date().getTime());
+                    var timestamp_future = 4232137830429*4; // some time in future
+                    var highscore = parseFloat(1+parseFloat((timestamp_future-timestamp)*Math.pow(10,-13))); //account timestamp.
+                    r.zadd("scoreset", highscore, username, function(){  //initialize each user with score 1.(bigvalue-timestamp).
                       cb(true);
                     });
                  });
@@ -88,8 +91,7 @@ module.exports = function(r){
       r.sadd("solved:problems:"+id, username, function(){
         var timestamp = Math.round(new Date().getTime());
         var timestamp_future = 4232137830429*4; // some time in future
-        var highscore = parseFloat(100+parseFloat((timestamp_future-timestamp)*Math.pow(10,-13))); // logic :  zadd leaderboard highscore.(Long.MAX_VALUE - timestamp) player_id (no repeat scores)
-        console.log(highscore);
+        var highscore = parseFloat(100+parseFloat((timestamp_future-timestamp)*Math.pow(10,-13))); //zadd leaderboard highscore.(Long.MAX_VALUE-timestamp) player_id
         r.zincrby("scoreset", highscore, username, function(){    
           r.set("last_timestamp:"+username, new Date().getTime(),function(){
             if(cb)
