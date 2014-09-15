@@ -10,7 +10,9 @@
     "redis": "^0.12.1",
     "sha1": "^1.1.0",
     "toobusy": "^0.2.4",
-    "validator": "^3.17.1"
+    "validator": "^3.17.1",
+    "express-brute": "~0.5.1",
+    "express-brute-redis": "0.0.1"
   },
   "engines": {
     "node": "0.10.16"
