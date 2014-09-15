@@ -78,17 +78,23 @@ module.exports=function(app, r){
   });
 
   app.get('/register/:username/:password/:email', function(req, res){
-    var username = req.params.username.replace(/\W/g, '');
-    var re = /\S+@\S+\.\S+/;
-    if(re.test(req.params.email))
-      users.create(username, req.params.password, req.params.email, function(result){
-        if(result){
-          req.session.username = username;
-          res.json("User successfully created.");
-        }
-        else
-          res.json("[[;;;red]Error! Try a different username or enter a valid email-id.(usernames can only contain a-z,A-Z, 0-9 characters).");      
-      });
+    if(req.session.username === 'guest' || req.session.username == null ){
+      var username = req.params.username.replace(/\W/g, '');
+      var re = /\S+@\S+\.\S+/;
+      if(re.test(req.params.email))
+        users.create(username, req.params.password, req.params.email, function(result){
+          if(result){
+            req.session.username = username;
+            res.json("User successfully created.");
+          }
+          else
+            res.json("[[;;;red]Error! Try a different username or enter a valid email-id.(usernames can only contain a-z,A-Z, 0-9 characters).");      
+        });
+      else
+        res.json("[[;;;red]Error! invalid email-id");
+    }
+    else
+      res.json("[[;;;red]Error ! session is live. logout to proceed");
   });
 
   app.get('/login/:username/:password', function(req,res){

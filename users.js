@@ -11,22 +11,26 @@ module.exports = function(r){
       if(err)
         cb(false);
       else{
-        if(res){
+        if(res)
           cb(false);
-        }
         else{
-          //callback NIGHTMARE !
-          r.sadd("users", username, function(){
-            r.set("passwords:"+username, hash, function(){
-               r.set("emails:"+username, email, function(){
-                  r.zadd("scoreset", 1, username, function(){  //for leaderboard ranking. initialize each user with score 1.
-                    cb(true);
-                  });
-               });
+          r.sismember('uniq_emails', email, function(err, res){   //look  for unique emails
+            if(res)
+              cb(false);
+            else
+            r.sadd("users", username, function(){
+              r.set("passwords:"+username, hash, function(){
+                r.sadd("uniq_emails",email,function(){
+                 r.set("emails:"+username, email, function(){
+                    r.zadd("scoreset", 1, username, function(){  //for leaderboard ranking. initialize each user with score 1.
+                      cb(true);
+                    });
+                 });
+                });
+              });
             });
           });
         }
-        //cb(false);
       }
     });
   };
@@ -83,7 +87,6 @@ module.exports = function(r){
     r.sadd("solved:users:"+username, id, function(){
       r.sadd("solved:problems:"+id, username, function(){
         var timestamp = Math.round(new Date().getTime());
-        //console.log(new Date().getTime());
         var timestamp_future = 4232137830429*4; // some time in future
         var highscore = parseFloat(100+parseFloat((timestamp_future-timestamp)*Math.pow(10,-13))); // logic :  zadd leaderboard highscore.(Long.MAX_VALUE - timestamp) player_id (no repeat scores)
         console.log(highscore);
