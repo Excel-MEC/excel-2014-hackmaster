@@ -13,22 +13,20 @@ var store = new redstore({
       prefix: 'f_hater'
     }),
     login_bruteforce = new ExpressBrute(store,{
-      freeRetries: 5,
+      freeRetries: 50,
       minWait: 5*60*1000,
       maxWait: 60*60*1000,
       //lifetime: 24*60*60*1000, // 1 hour time out
       failCallback : failCallback
     }),
     submit_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 5,
-      freeRetries: 5,
+      freeRetries: 50,
       minWait: 5*60*1000,
       maxWait: 60*60*1000,
       //lifetime: 3*60*60*1000, // 1 hour time out
       failCallback : failCallback
     }),
     register_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 5,
       freeRetries: 5,
       minWait: 200*60*1000,
       maxWait: 600*60*1000,

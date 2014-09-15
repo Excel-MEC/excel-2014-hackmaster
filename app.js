@@ -1,21 +1,4 @@
 //hackmaster2014
-var cluster = require('cluster');
-// Code to run if we're in the master process
-if (cluster.isMaster) {
-    // Count the machine's CPUs
-    var cpuCount = require('os').cpus().length;
-    console.log("SERVER started on port : 8080");
-    console.log("CPU's detected         : "+cpuCount);
-    // Create a worker for each CPU
-    for (var i = 0; i < cpuCount; i += 1) 
-        cluster.fork();
-    // Listen for dying workers
-    cluster.on('exit', function (worker) {
-        console.log('WORKER ' + worker.id + ' DEAD !');
-        cluster.fork();
-    });
-// Code to run if we're in a worker process
-} else {
 var express = require('express'),
    //config = require('./config'),
     toobusy = require('toobusy'),
@@ -55,11 +38,5 @@ r.on("error", function (err) {
 // Routes
 require('./routes')(app, r);
 app.listen(process.env.PORT || 8080);
-console.log('WORKER ' + cluster.worker.id + ' now RUNNING !');
-process.on('SIGINT', function() {
-  // calling .shutdown allows your process to exit normally
-  console.log("WORKER " + cluster.worker.id + "SHUTDOWN");
-  toobusy.shutdown();
-  process.exit();
-});
-}
+
+
