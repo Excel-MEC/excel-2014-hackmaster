@@ -87,6 +87,10 @@ module.exports=function(app, r){
         res.json(["Hacks by "+req.params.username+": ", response.join(", ")]);
     })
   });
+  app.get('/rank', function(req, res){
+    if(req.session.username !== 'guest')
+      res.redirect('/rank/'+req.session.username);
+  });
   app.get('/rank/:username',function(req,res){
     users.rank(req.params.username, function(response){
         if(response)
@@ -157,7 +161,7 @@ module.exports=function(app, r){
       { msg:'[[b;;;white]hacker <username>] to see the profile of a hacker.' },
       { msg:'[[b;;;white]leaderboard] to see the top 10 hackers.' },
       { msg:'[[b;;;white]leaderboard <N>] to see the top N hackers.' },
-      { msg:'[[b;;;white]rank <username>] to see the rank of a hacker.' },
+      { msg:'[[b;;;white]rank <username>] to see the rank of a hacker, defualt shows your rank.' },
       { msg:'[[b;;;white]logout] to exit.' },
       { msg:'Several other terminal commands (like [[;;;red]clear, ls, cd, whoami] etc) are also supported.' }
     ]);
