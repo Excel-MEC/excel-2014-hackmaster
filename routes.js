@@ -1,12 +1,40 @@
 var problems = require("./problem"),
-    ExpressBrute = require('express-brute'),     //experimental
-    redstore = require('express-brute-redis'),
-    store = new redstore({
+    ExpressBrute = require('express-brute'),
+    moment = require('moment'),     
+    redstore = require('express-brute-redis');
+
+var failCallback = function (req, res, next, nextValidRequestDate) {
+    res.json("\n\n\"A Jedi uses the Force for knowledge and defense, never for attack.\" \nThe admin might mistake this for a bruteforce. Try again in "+moment(nextValidRequestDate).fromNow()+"\n\n"); 
+};
+
+var store = new redstore({
       host: '127.0.0.1',
       port: 6379,
-      prefix: 'hater'
+      prefix: 'f_hater'
     }),
-    bruteforce = new ExpressBrute(store),
+    login_bruteforce = new ExpressBrute(store,{
+      freeRetries: 5,
+      minWait: 5*60*1000,
+      maxWait: 60*60*1000,
+      //lifetime: 24*60*60*1000, // 1 hour time out
+      failCallback : failCallback
+    }),
+    submit_bruteforce =  new ExpressBrute(store,{
+      freeRetries: 5,
+      freeRetries: 5,
+      minWait: 5*60*1000,
+      maxWait: 60*60*1000,
+      //lifetime: 3*60*60*1000, // 1 hour time out
+      failCallback : failCallback
+    }),
+    register_bruteforce =  new ExpressBrute(store,{
+      freeRetries: 5,
+      freeRetries: 5,
+      minWait: 200*60*1000,
+      maxWait: 600*60*1000,
+      //lifetime: 24*60*60*1000, // 1 day time out
+      failCallback : failCallback
+    }),
     util = require("./util");
 //Express App, Configuration, Redis db
 var auth= function(req,res, next){
@@ -15,6 +43,7 @@ var auth= function(req,res, next){
   else
     res.json("You need to be logged in to perform this action");
 }
+
 module.exports=function(app, r){
   var users= require('./users')(r);
   function dbError(res){
@@ -85,7 +114,7 @@ module.exports=function(app, r){
       res.json("invalid limit.")
   });
 
-  app.get('/register/:username/:password/:email', bruteforce.prevent, function(req, res){        //bruteforce (experimental not battle tested)
+  app.get('/register/:username/:password/:email', register_bruteforce.prevent, function(req, res){        //bruteforce (experimental not battle tested)
     if(req.session.username === 'guest' || req.session.username == null ){
       var username = req.params.username.replace(/\W/g, '');
       var re = /\S+@\S+\.\S+/;
@@ -105,7 +134,7 @@ module.exports=function(app, r){
       res.json("[[;;;red]Error ! session is live. logout to proceed");
   });
 
-  app.get('/login/:username/:password', bruteforce.prevent, function(req,res){
+  app.get('/login/:username/:password', login_bruteforce.prevent, function(req,res){
     var username = req.params.username.replace(/\W/g, '');
     users.checkPass(username, req.params.password, function(response){
       if(response==true){
@@ -164,7 +193,7 @@ module.exports=function(app, r){
     }
     res.json(response);
   });
-  app.get('/submit/:id/:solution', bruteforce.prevent, auth, function(req, res){
+  app.get('/submit/:id/:solution', submit_bruteforce.prevent, auth, function(req, res){
     var id = parseInt(req.params.id);
     if(problems.check(id, req.params.solution)){
       res.json("You have Cracked it.");
@@ -262,7 +291,7 @@ module.exports=function(app, r){
       var sha1=require("sha1");
       res.json(md5(sha1(req.params.str)));
   });
-  app.get('/logout', bruteforce.prevent, function(req,res){
+  app.get('/logout', function(req,res){
       req.session.cwd='~';
       req.session.username='guest';
       res.json("Session Terminated.");
