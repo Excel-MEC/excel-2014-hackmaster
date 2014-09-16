@@ -217,7 +217,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=30;i++){
+        for(var i=1;i<=8;i++){
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else
