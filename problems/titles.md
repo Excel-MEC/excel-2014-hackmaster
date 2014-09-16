@@ -5,5 +5,7 @@ Needle in haystack
 Listen
 rubbish.txt
 GET it 
-u
+Watch the Show !
+magic number
+Et tu, Brute?
 

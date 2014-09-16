@@ -4,7 +4,11 @@ var problems = require("./problem"),
     redstore = require('express-brute-redis');
 
 var failCallback = function (req, res, next, nextValidRequestDate) {
-    res.json("\n\n\"A Jedi uses the Force for knowledge and defense, never for attack.\" \nThe admin might mistake this for a bruteforce. Try again in "+moment(nextValidRequestDate).fromNow()+"\n\n"); 
+    res.json("\n\nThe admin might mistake this for a bruteforce. Try again in "+moment(nextValidRequestDate).fromNow()+"\n\n"); 
+};
+
+var failCallback101 = function (req, res, next, nextValidRequestDate) {
+    res.json("\n\n\"A Jedi_hacker uses the Force for knowledge and defense, never for attack.\" \nThe admin might mistake this for a bruteforce. Try again in "+moment(nextValidRequestDate).fromNow()+"\n\n"); 
 };
 
 var store = new redstore({
@@ -14,22 +18,22 @@ var store = new redstore({
     }),
     login_bruteforce = new ExpressBrute(store,{
       freeRetries: 50,
-      minWait: 5*60*1000,
-      maxWait: 60*60*1000,
+      minWait: 5*60*1000*10,
+      maxWait: 60*60*1000*10,
       //lifetime: 24*60*60*1000, // 1 hour time out
       failCallback : failCallback
     }),
     submit_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 50,
-      minWait: 5*60*1000,
-      maxWait: 60*60*1000,
+      freeRetries: 200,
+      minWait: 5*60*1000*10,
+      maxWait: 60*60*1000*10,
       //lifetime: 3*60*60*1000, // 1 hour time out
-      failCallback : failCallback
+      failCallback : failCallback101
     }),
     register_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 5,
-      minWait: 200*60*1000,
-      maxWait: 600*60*1000,
+      freeRetries: 9,
+      minWait: 200*60*1000*2,
+      maxWait: 600*60*1000*2,
       //lifetime: 24*60*60*1000, // 1 day time out
       failCallback : failCallback
     }),
@@ -217,7 +221,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=8;i++){
+        for(var i=1;i<=10;i++){
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else
