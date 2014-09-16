@@ -1,7 +1,11 @@
 $(document).ready(function(){
-  var user = "player";
+  var user = "guest";
+  var greet = '';
   $.getJSON("/whoami", function(data){
+    $.getJSON("/pwd",function(direc){
     user = data;
+    if(user==="guest")
+      greet = "Hi, try 'help' command to start.";
     $("#console").terminal(
       function(command, term){
         var write = function(data){
@@ -56,9 +60,9 @@ $(document).ready(function(){
         })
       },
       {
-        greetings: '',
+        greetings: greet,
         height: $(window).height()-100,
-        prompt: user + '@Hackmaster/~# ',
+        prompt: user + '@Hackmaster/'+direc+'# ',
         keydown: function(e, term){
           if(e.keyCode==76 && e.ctrlKey==true)
             term.clear();
@@ -66,5 +70,6 @@ $(document).ready(function(){
       }
     );
   });
+});
 });
 
