@@ -5,7 +5,7 @@ $(document).ready(function(){
     $.getJSON("/pwd",function(direc){
     user = data;
     if(user==="guest")
-      greet = "Hi, try 'help' command to start.";
+      greet = "Hi, Welcome to Excel 2014 | H A C K M A S T E R\n\ntype 'help' command to start.\n";
     $("#console").terminal(
       function(command, term){
         var write = function(data){

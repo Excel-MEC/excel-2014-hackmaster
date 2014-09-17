@@ -1,11 +1,6 @@
 Crypto-101
-You cant see me
+can you see me ?
 Play_me
-Needle in haystack
+Showtime ! 
 Listen
-rubbish.txt
-GET it 
-Watch the Show !
-magic number
-Et tu, Brute?
-Login.
+

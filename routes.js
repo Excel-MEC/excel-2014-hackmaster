@@ -221,12 +221,12 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=10;i++){
+        for(var i=1;i<=5;i++){          //no of questions
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else
           response+=i+"\t";
-          if(i%10==0)
+          if(i%5==0)
             response+="\n";
         }
         res.json(response);
