@@ -305,6 +305,23 @@ module.exports=function(app, r){
   //404 for hackmaster question
   app.get('/404', function(req,res){res.sendfile('public/404.html');});
   app.get('/pagenotfound',function(req,res){res.redirect('/404')});
+  //for form hiding question
+  app.post('/adminlogin', function(req,res){
+    if(req.body.login == "admin"){
+      //console.log("admin login");
+      if(req.body.password == "5elephants"){
+        //console.log("password correct");
+        res.send("Key : m3gatr0n");
+      }
+      else
+        res.send("Incorrect password.");
+    }
+    else
+      res.send("Only admin can login.")
+  });
+
+
+
   app.get('*',function(req,res){
       res.json("[[;;;red]Command not found.");
   });
