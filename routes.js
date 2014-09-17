@@ -31,7 +31,7 @@ var store = new redstore({
       failCallback : failCallback101
     }),
     register_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 50,
+      freeRetries: 100,
       minWait: 200*60*1000*2,
       maxWait: 600*60*1000*2,
       //lifetime: 24*60*60*1000, // 1 day time out
