@@ -31,7 +31,7 @@ var store = new redstore({
       failCallback : failCallback101
     }),
     register_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 9,
+      freeRetries: 50,
       minWait: 200*60*1000*2,
       maxWait: 600*60*1000*2,
       //lifetime: 24*60*60*1000, // 1 day time out
@@ -122,6 +122,8 @@ module.exports=function(app, r){
 
   app.get('/register/:username/:password/:email', register_bruteforce.prevent, function(req, res){        //bruteforce (experimental not battle tested)
     if(req.session.username === 'guest' || req.session.username == null ){
+      if(req.params.username == 'guest')
+        req.params.username = '&&&??@!@#!@#'; //prevent guest as a username 
       var username = req.params.username.replace(/\W/g, '');
       var re = /\S+@\S+\.\S+/;
       if(re.test(req.params.email))
