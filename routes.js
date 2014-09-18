@@ -17,21 +17,21 @@ var store = new redstore({
       prefix: 'f_hater'
     }),
     login_bruteforce = new ExpressBrute(store,{
-      freeRetries: 50,
+      freeRetries: 150,
       minWait: 5*60*1000*10,
       maxWait: 60*60*1000*10,
       //lifetime: 24*60*60*1000, // 1 hour time out
       failCallback : failCallback
     }),
     submit_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 200,
-      minWait: 5*60*1000*10,
-      maxWait: 60*60*1000*10,
+      freeRetries: 2000,
+      minWait: 5*60*1000*1,
+      maxWait: 60*60*1000*1,
       //lifetime: 3*60*60*1000, // 1 hour time out
       failCallback : failCallback101
     }),
     register_bruteforce =  new ExpressBrute(store,{
-      freeRetries: 100,
+      freeRetries: 150,
       minWait: 200*60*1000*2,
       maxWait: 600*60*1000*2,
       //lifetime: 24*60*60*1000, // 1 day time out
@@ -94,6 +94,8 @@ module.exports=function(app, r){
   app.get('/rank', function(req, res){
     if(req.session.username !== 'guest')
       res.redirect('/rank/'+req.session.username);
+    else
+      res.redirect("/failure");
   });
   app.get('/rank/:username',function(req,res){
     users.rank(req.params.username, function(response){
