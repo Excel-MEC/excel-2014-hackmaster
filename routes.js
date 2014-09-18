@@ -152,6 +152,9 @@ module.exports=function(app, r){
     users.checkPass(username, req.params.password, function(response){
       if(response){
         req.session.username = username;
+        if(response==true)
+          res.json("welcome back "+ req.params.username+".");
+        else
         res.json("welcome back "+ req.params.username+".\nYour last reported login was at "+response);
       }
       else

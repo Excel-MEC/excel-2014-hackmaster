@@ -48,9 +48,14 @@ module.exports = function(r){
       else{
         if(util.hash(password)==res){
           r.get("lastlogin:"+username,function(err, res1){
-              r.set("lastlogin:"+username, mom().format('MMMM Do YYYY, h:mm:ss a'), function(err, res2){
+              if(err)                                                                                                    //old to new bug fix remove for fresh deployment
+                r.set("lastlogin:"+username, mom().format('MMMM Do YYYY, h:mm:ss a'), function(err, res2){
+                  cb(true);
+                });
+              else
+                r.set("lastlogin:"+username, mom().format('MMMM Do YYYY, h:mm:ss a'), function(err, res2){
                   cb(res1);
-              });
+                });
           });
           //cb(mom().format('MMMM Do YYYY, h:mm:ss a'));
         }
