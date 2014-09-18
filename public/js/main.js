@@ -5,7 +5,7 @@ $(document).ready(function(){
     $.getJSON("/pwd",function(direc){
     user = data;
     if(user==="guest")
-      greet = "Hi, Welcome to Excel 2014 | H A C K M A S T E R\n\ntype 'help' command to start.\n";
+      greet = "Welcome to Excel 2014 | H A C K M A S T E R\n\n------------------------------------\nOur forum : hackforum.excelmec.org\ntry 'help' command to start.\n------------------------------------\n";
     $("#console").terminal(
       function(command, term){
         var write = function(data){
@@ -32,13 +32,13 @@ $(document).ready(function(){
           else
           write(data);
           if(data === "Session Terminated."){
-            term.set_prompt('guest@Hackmaster/~# ', function(){});
+            term.set_prompt('[guest][Hackmaster/~]$ ', function(){}); 
             term.resume();
           }
           if( url.search("/register")==0||url.search("/login")==0){
             $.getJSON("/whoami", function(data1) {
               $.getJSON("/pwd", function(data2) {
-                term.set_prompt(data1 + '@Hackmaster/'+data2+'# ', function(){});
+                term.set_prompt('['+data1 +']'+ '[Hackmaster/'+data2+']$ ', function(){});
               });
             });
             term.resume();
@@ -46,7 +46,7 @@ $(document).ready(function(){
           else if(url.search("/cd")==0){
             $.getJSON("/whoami", function(data1) {
               $.getJSON("/pwd", function(data2) {
-                term.set_prompt(data1 + '@Hackmaster/'+data2+'# ', function(){});
+                term.set_prompt('['+data1+']'+'[Hackmaster/'+data2+']$ ', function(){});
               });
             });
             term.resume();
@@ -62,7 +62,7 @@ $(document).ready(function(){
       {
         greetings: greet,
         height: $(window).height()-100,
-        prompt: user + '@Hackmaster/'+direc+'# ',
+        prompt: '['+user+']'+'[Hackmaster/'+direc+']$ ',
         keydown: function(e, term){
           if(e.keyCode==76 && e.ctrlKey==true)
             term.clear();

@@ -2,6 +2,7 @@
 
 var util=require('./util');
 var validator = require('validator');   //npm install validator
+var mom = require('moment');
 module.exports = function(r){
   var createUser = function(username, password, email, cb){
     username = username.replace(/\W/g, '');
@@ -17,7 +18,7 @@ module.exports = function(r){
           r.sismember('uniq_emails', email, function(err, res){   //look  for unique emails
             if(res)
               cb(false);
-            else
+            else                                                     //callback nightmare :(
             r.sadd("users", username, function(){
               r.set("passwords:"+username, hash, function(){
                 r.sadd("uniq_emails",email,function(){
@@ -26,7 +27,10 @@ module.exports = function(r){
                     var timestamp_future = 4232137830429*4; // some time in future
                     var highscore = parseFloat(1+parseFloat((timestamp_future-timestamp)*Math.pow(10,-13))); //account timestamp.
                     r.zadd("scoreset", highscore, username, function(){  //initialize each user with score 1.(bigvalue-timestamp).
-                      cb(true);
+                      r.set('lastlogin:'+username, mom().format('MMMM Do YYYY, h:mm:ss a'), function(){
+                        cb(true);
+                      });
+                      //cb(true);
                     });
                  });
                 });
@@ -42,8 +46,14 @@ module.exports = function(r){
       if(err)
         cb(false);
       else{
-        if(util.hash(password)==res)
-          cb(true);
+        if(util.hash(password)==res){
+          r.get("lastlogin:"+username,function(err, res1){
+              r.set("lastlogin:"+username, mom().format('MMMM Do YYYY, h:mm:ss a'), function(err, res2){
+                  cb(res1);
+              });
+          });
+          //cb(mom().format('MMMM Do YYYY, h:mm:ss a'));
+        }
         else
           cb(false);
       }

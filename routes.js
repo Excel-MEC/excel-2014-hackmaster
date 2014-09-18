@@ -16,8 +16,11 @@ var store = new redstore({
       port: 6379,
       prefix: 'f_hater'
     }),
+
+    // brute force not set !!!!
+
     login_bruteforce = new ExpressBrute(store,{
-      freeRetries: 150,
+      freeRetries: 250,   //trial
       minWait: 5*60*1000*10,
       maxWait: 60*60*1000*10,
       //lifetime: 24*60*60*1000, // 1 hour time out
@@ -144,13 +147,12 @@ module.exports=function(app, r){
       res.json("[[;;;red]Error ! session is live. logout to proceed");
   });
 
-  app.get('/login/:username/:password', login_bruteforce.prevent, function(req,res){
+  app.get('/login/:username/:password', function(req,res){
     var username = req.params.username.replace(/\W/g, '');
     users.checkPass(username, req.params.password, function(response){
-      if(response==true){
-        //console.log("** login by : "+username);
+      if(response){
         req.session.username = username;
-        res.json("welcome "+ req.params.username+".");
+        res.json("welcome back "+ req.params.username+".\nYour last reported login was at "+response);
       }
       else
         res.json("[[;;;red]Error in logging in.");
@@ -203,7 +205,7 @@ module.exports=function(app, r){
     }
     res.json(response);
   });
-  app.get('/submit/:id/:solution', submit_bruteforce.prevent, auth, function(req, res){
+  app.get('/submit/:id/:solution', auth, function(req, res){
     var id = parseInt(req.params.id);
     if(problems.check(id, req.params.solution)){
       res.json("You have Cracked it.");
@@ -304,7 +306,7 @@ module.exports=function(app, r){
   app.get('/logout', function(req,res){
       req.session.cwd='~';
       req.session.username='guest';
-      res.json("Session Terminated.");
+      res.json("Session Terminated at "+moment().format('MMMM Do YYYY, h:mm:ss a'));
   });
   //404 for hackmaster question
   app.get('/404', function(req,res){res.sendfile('public/404.html');});
@@ -323,9 +325,9 @@ module.exports=function(app, r){
     else
       res.send("Only admin can login.")
   });
-
-
-
+  app.get('/time',function(req, res){
+    res.json(moment().format('MMMM Do YYYY, h:mm:ss a'));
+  });
   app.get('*',function(req,res){
       res.json("[[;;;red]Command not found.");
   });
