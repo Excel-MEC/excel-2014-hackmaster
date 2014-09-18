@@ -230,7 +230,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=5;i++){          //no of questions
+        for(var i=1;i<=10;i++){          //no of questions
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else
