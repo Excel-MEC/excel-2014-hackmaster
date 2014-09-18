@@ -51,6 +51,11 @@ $(document).ready(function(){
             });
             term.resume();
           }
+          else if(url.search("/logout")==0){
+            setTimeout(function(){
+              term.destroy();
+            },3000); 
+          }
           else{
             term.resume();
           }

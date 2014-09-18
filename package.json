@@ -12,7 +12,9 @@
     "redis": "^0.12.1",
     "sha1": "^1.1.0",
     "toobusy": "^0.2.4",
-    "validator": "^3.17.1"
+    "validator": "^3.17.1",
+    "connect-redis": "~2.1.0",
+    "express-session": "~1.8.2"
   },
   "engines": {
     "node": "0.10.16"
