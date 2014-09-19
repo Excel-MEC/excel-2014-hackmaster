@@ -1,0 +1,4 @@
+# Stop spidy from ...
+User-agent: spiderman
+Disallow: /
+Crawl-delay: 1000

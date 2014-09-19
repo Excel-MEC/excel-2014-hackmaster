@@ -183,7 +183,7 @@ module.exports=function(app, r){
   /** Problem related routes */
   /** Get a list of Problems */
   app.get('/problems',function(req,res){
-    res.redirect('/problems/1/10');
+    res.redirect('/problems/1/15');
   });
 
   //Fix a typo
@@ -211,11 +211,11 @@ module.exports=function(app, r){
   app.get('/submit/:id/:solution', auth, function(req, res){
     var id = parseInt(req.params.id);
     if(problems.check(id, req.params.solution)){
-      res.json("You have Cracked it.");
+      res.json("You have [[b;;;]Cracked] it.");
       users.markSolved(req.session.username, id);
     }
     else{
-      res.json("Sorry old sport, Wrong Answer.");
+      res.json("Sorry old sport, [[;;;red]Wrong] Answer.");
     }
   });
   /** Session aware routes **/
@@ -230,7 +230,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=10;i++){          //no of questions
+        for(var i=1;i<=15;i++){          //no of questions
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else

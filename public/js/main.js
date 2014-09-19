@@ -6,6 +6,8 @@ $(document).ready(function(){
     user = data;
     if(user==="guest")
       greet = "Welcome to Excel 2014 | H A C K M A S T E R\n\n------------------------------------\nOur forum : hackforum.excelmec.org\ntry 'help' command to start.\n------------------------------------\n";
+    else
+      greet = 'Excel 2014 | H A C K M A S T E R\n\n';
     $("#console").terminal(
       function(command, term){
         var write = function(data){
