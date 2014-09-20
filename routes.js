@@ -183,7 +183,7 @@ module.exports=function(app, r){
   /** Problem related routes */
   /** Get a list of Problems */
   app.get('/problems',function(req,res){
-    res.redirect('/problems/1/15');
+    res.redirect('/problems/1/19');
   });
 
   //Fix a typo
