@@ -13,7 +13,7 @@ var session = require('express-session')
     app.use(express.json());
     app.use(express.urlencoded());
     app.use(express.cookieParser());
-    app.use(express.session({ key:'excelhackm' ,store: new RedisStore, secret:"BadboyaHackMasteryds8a7" }));
+    app.use(express.session({ key:'excelhackm' ,store: new RedisStore, secret:"BadboyaHackMasteryds8a7", cookie:{maxAge:6000}}));
     app.use(setSession);
     app.use(app.router);
     app.enable('trust proxy');

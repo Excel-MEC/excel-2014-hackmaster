@@ -230,7 +230,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=15;i++){          //no of questions
+        for(var i=1;i<=19;i++){          //no of questions
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else
@@ -328,6 +328,19 @@ module.exports=function(app, r){
     else
       res.send("Only admin can login.")
   });
+  //for android apk question
+  app.post('/apk9090login', function(req,res){
+    if(req.body.value1 == "sdf97asdf6456"){
+      if(req.body.value2 == "adsf0987324jksdf"){
+        res.send("Key : n0_dr01d_can_st0p_M3");
+      }
+      else
+        res.send("Incorrect password.");
+    }
+    else
+      res.send("Only admin can login.")
+  });
+
   app.get('/time',function(req, res){
     res.json(moment().format('MMMM Do YYYY, h:mm:ss a'));
   });
