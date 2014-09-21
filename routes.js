@@ -183,7 +183,7 @@ module.exports=function(app, r){
   /** Problem related routes */
   /** Get a list of Problems */
   app.get('/problems',function(req,res){
-    res.redirect('/problems/1/19');
+    res.redirect('/problems/1/24');
   });
 
   //Fix a typo
@@ -230,7 +230,7 @@ module.exports=function(app, r){
     switch(cwd){
       case 'problems':
         var response=''
-        for(var i=1;i<=19;i++){          //no of questions
+        for(var i=1;i<=24;i++){          //no of questions
 	  if(i<10)
 	  response+="0"+i+"\t";
 	  else
