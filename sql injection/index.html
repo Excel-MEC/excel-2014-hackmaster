@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Project listing</title>
+
+  <link rel='stylesheet' href='css/jquery-ui.css'>
+
+    <link rel="stylesheet" href="css/style.css" media="screen" type="text/css" />
+
+</head>
+
+<body>
+  <div class="login-card" id="login">
+    <h1>Log-in</h1><br>
+    <input type="text" required id="user" placeholder="Username">
+    <input type="password" required id="pass" placeholder="Password">
+    <input type="submit" id="loginbutton" class="login login-submit" value="login">
+
+  <div class="login-help" id="login-help">
+    
+  </div>
+</div>
+<div id="tables">
+</div>
+<div id="error">
+</div>
+<!-- <div id="error"><img src="https://dl.dropboxusercontent.com/u/23299152/Delete-icon.png" /> Your caps-lock is on.</div> -->
+
+  <script src='jquery_ui.js'></script>
+  <script>
+  $(document).ready(function(){
+  $("#loginbutton").click(function(){
+  var user=document.getElementById("user").value;
+  var pass=document.getElementById("pass").value;
+  var values="username="+user+"&password="+pass;
+  $.ajax({
+        type:"POST",
+                url: 'backend.php',
+                data: values,
+                success: function(data, status){
+                var obj=JSON.parse(data);
+
+                  if(obj.resp=="Success")
+                  {
+                    document.getElementById("login").style.display="none";
+                    document.getElementById("tables").innerHTML=obj.projectlist;
+                  }
+                  else
+                  {
+                    document.getElementById("login-help").innerHTML=obj.resp;
+                    document.getElementById("login-help").style="color:red; background-color:rgba(111,211,211,0.3);";
+
+
+                  }
+                },
+        error: function(){
+        alert("There was an error in passing....please excuse us.");
+        }
+        });
+    });
+  });
+  </script>
+</body>
+
+</html>
