@@ -5,7 +5,7 @@ $(document).ready(function(){
     $.getJSON("/pwd",function(direc){
     user = data;
     if(user==="guest")
-      greet = "Welcome to Excel 2014 | H A C K M A S T E R\n\n------------------------------------\nOur forum : hackforum.excelmec.org\ntry 'help' command to start.\n------------------------------------\n";
+      greet = "Welcome to Excel 2014 | H A C K M A S T E R\n\n------------------------------------\nThe winners have been declared !\ntry 'help' command to start.\n------------------------------------\n";
     else
       greet = 'Excel 2014 | H A C K M A S T E R\n\n';
     $("#console").terminal(
